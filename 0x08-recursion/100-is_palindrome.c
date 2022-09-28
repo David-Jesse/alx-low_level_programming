@@ -1,47 +1,42 @@
 #include "main.h"
-
-int cmp(char *c1, char *c2);
-
 /**
- * escwild - escapes wildcard and increments string 1 if fails to match
- * @c1: string 1
- * @wild: string 2
- * Return: go through string 1 until it finds a match or '\0' value is found
+ * get_length - gets length of string
+ * @str: pointer to a string
+ * @len: length of a string
+ * Return: return length of string
  */
-int escwild(char *c1, char *wild)
+int get_length(char *str, int len)
 {
-	if (*c1 == '\0')
-		return (cmp(c1, wild));
-	return (cmp(c1, wild) || escwild(++c1, wild));
-}
-
-/**
- * cmp - compare string 1 and string 2 using wildcard
- * @c1: string 1
- * @c2: string 2
- * Return: return 0 if no match return 1 if match
- */
-int cmp(char *c1, char *c2)
-{
-	if (*c1 == *c2 || *c2 == '*')
+	if (*(str + len) != '\0')
 	{
-		if (*c2 == '*')
-			return (escwild(c1, ++c2));
-		else if (*c1 == '\0')
-			return (1);
-		else
-			return (cmp(++c1, ++c2));
+		return (get_length(str, ++len));
 	}
+	return (--len);
+}
+/**
+ * check_pali - gets length of string
+ * @f: pointer to a string
+ * @r: length of a string
+ * @len: length of a string
+ * Return: return 0 if its not palindrome return 1 if it is
+ */
+int check_pali(char *f, char *r, int len)
+{
+	if (*f == *(r + len) && len > 1)
+	{
+		f++;
+		return (check_pali(f, r, --len));
+	}
+	if (len == 1)
+		return (1);
 	return (0);
 }
-
 /**
- * wildcmp - compare string 1 and string 2 using wildcard
- * @s1: string 1
- * @s2: string 2
- * Return: return 0 if no match return 1 if match
+ * is_palindrome - checks if a string is a palindrome
+ * @s: pointer to a string
+ * Return: return 0 if its not palindrome return 1 if it is
  */
-int wildcmp(char *s1, char *s2)
+int is_palindrome(char *s)
 {
-	return (cmp(s1, s2));
+	return (check_pali(s, s, get_length(s, 0)));
 }
