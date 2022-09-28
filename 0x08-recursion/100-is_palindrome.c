@@ -1,54 +1,47 @@
-/*
- * File: 100-is_palindrome.c
- * Auth: David-Jesse
- */
 #include "main.h"
+
+int cmp(char *c1, char *c2);
+
 /**
- * last_index - returns the last index of a string (counts the null char)
- * @s: pointer the string
- * Return: int
+ * escwild - escapes wildcard and increments string 1 if fails to match
+ * @c1: string 1
+ * @wild: string 2
+ * Return: go through string 1 until it finds a match or '\0' value is found
  */
-
-int last_index(char *s)
+int escwild(char *c1, char *wild)
 {
-int n = 0;
-
-if (*s > '\0')
-	n += last_index(s + 1) + 1;
-
-return (n);
+	if (*c1 == '\0')
+		return (cmp(c1, wild));
+	return (cmp(c1, wild) || escwild(++c1, wild));
 }
 
 /**
- * is_palindrome - check if a string is a palindrome
- * @s: string to check
- * Return: 0 or 1
+ * cmp - compare string 1 and string 2 using wildcard
+ * @c1: string 1
+ * @c2: string 2
+ * Return: return 0 if no match return 1 if match
  */
-
-int is_palindrome(char *s)
+int cmp(char *c1, char *c2)
 {
-int end = last_index(s);
-
-return (check(s, 0, end - 1, end % 2));
+	if (*c1 == *c2 || *c2 == '*')
+	{
+		if (*c2 == '*')
+			return (escwild(c1, ++c2));
+		else if (*c1 == '\0')
+			return (1);
+		else
+			return (cmp(++c1, ++c2));
+	}
+	return (0);
 }
 
 /**
- * check - checker for the palindrome
- * @s: string
- * @start: int moves from right to left
- * @end: int moves from left to right
- * @pair: int
- * Return: 0 or 1
+ * wildcmp - compare string 1 and string 2 using wildcard
+ * @s1: string 1
+ * @s2: string 2
+ * Return: return 0 if no match return 1 if match
  */
-
-
-int check(char *s, int start, int end, int pair)
+int wildcmp(char *s1, char *s2)
 {
-
-	if ((start == end && pair != 0) || (start == end + 1 && pair == 0))
-		return (1);
-	else if (s[start] != s[end])
-		return (0);
-	else
-		return (check(s, start + 1, end - 1, pair));
+	return (cmp(s1, s2));
 }
